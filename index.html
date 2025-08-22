@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Random Invective</title>
+  <style>
+    :root {
+      --bg: #0f0f12;
+      --card: #1a1a20;
+      --text: #eaeaea;
+      --muted: #a0a0a8;
+      --accent: #3a86ff;
+    }
+    html, body { height: 100%; }
+    body {
+      margin: 0; background: radial-gradient(1200px 800px at 50% 0%, #141418, var(--bg));
+      color: var(--text); font-family: Georgia, "Times New Roman", Times, serif; display: grid; place-items: center;
+    }
+    .app {
+      width: min(900px, 92vw);
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
+      padding: clamp(16px, 4vw, 28px);
+    }
+    h1 {
+      margin: 0 0 .25rem 0; font-weight: 600; letter-spacing: .3px; font-size: clamp(18px, 2.2vw, 22px);
+      color: var(--muted);
+    }
+    .insult {
+      margin-top: .25rem; font-size: clamp(26px, 3.2vw, 38px); line-height: 1.3; letter-spacing: .2px;
+      padding: .4rem 0 1rem 0; min-height: 6.5rem;
+    }
+    .controls {
+      display: flex; gap: .75rem; align-items: center;
+    }
+    button {
+      -webkit-tap-highlight-color: transparent;
+      appearance: none; border: none; cursor: pointer;
+      background: var(--accent); color: white; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      font-weight: 700; letter-spacing: .3px;
+      border-radius: 12px; padding: .8rem 1.1rem; font-size: 1rem;
+      box-shadow: 0 6px 18px rgba(58,134,255,.35);
+      transition: transform .05s ease, box-shadow .15s ease;
+    }
+    button:active { transform: translateY(1px); box-shadow: 0 4px 12px rgba(58,134,255,.35); }
+    .hint { color: var(--muted); margin: .5rem 0 0 0; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <h1>Who is Donald Trump?
+    <div id="insult" class="insult" role="status" aria-live="polite"></div>
+    <div class="controls">
+      <button id="btn" type="button" aria-label="Show another">Give me another</button>
+    </div>
+    <p class="hint">Press <kbd>Space</kbd> or <kbd>Enter</kbd> for a new line. No repeats until the deck resets.</p>
+  </main>
+
+  <script>
+    // Pool derived from your curated list; two entries adjusted to avoid "man/human" nouns.
+    const phrases = [
+      "an autocratic, duplicitous, unprincipled, craven monster",
+      "a kleptocratic, self-dealing, venal autocrat",
+      "a mendacious, bombastic, reality-inverting propagandist",
+      "a vindictive, paranoid, conspiracy-peddling demagogue",
+      "a narcissistic, megalomaniacal, thin-skinned bully",
+      "a tyrannical, censorious, dissent-crushing dictator",
+      "a rapacious, predatory, influence-peddling kleptocrat",
+      "a hubristic, reckless, norm-shredding opportunist",
+      "a truculent, bellicose, grievance-stoking rabble-rouser",
+      "a corrupt, unscrupulous, law-indifferent grifter",
+      "a scurrilous, calumny-slinging, incendiary fabulist",
+      "a capricious, spiteful, thin-skinned authoritarian",
+      "a xenophobic, misogynistic, illiberal reactionary",
+      "a grandiose, unmoored-from-reality, truth-averse charlatan",
+      "a ruthless, thuggish, brutality-admiring despot",
+      "a petty, petulant, score-settling bully",
+      "a two-faced, dissembling, gaslighting operator",
+      "a plutocratic, oligarch-coddling, crony-ridden overlord",
+      "an Orwellian, propaganda-sodden, doublethink huckster",
+      "a vindictive, retribution-obsessed, paranoia-soaked autocrat",
+      "an avaricious, mercenary, self-glorifying usurper",
+      "a deceit-addled, hyperbolic, bad-faith performer",
+      "a depraved, ignoble, unconscionable tyrant",
+      "a shameless, brazen, accountability-dodging blowhard"
+    ];
+
+    const out = document.getElementById('insult');
+    const btn = document.getElementById('btn');
+    let deck = [];
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function nextLine() {
+      if (deck.length === 0) deck = shuffle(phrases.slice());
+      const phrase = deck.pop();
+      out.textContent = `He is ${phrase}.`;
+    }
+
+    btn.addEventListener('click', nextLine);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); nextLine(); }
+    });
+
+    // Prime with a line on load
+    nextLine();
+  </script>
+</body>
+</html>
